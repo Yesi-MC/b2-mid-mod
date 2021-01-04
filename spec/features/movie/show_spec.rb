@@ -13,8 +13,25 @@ RSpec.describe "As a visitor when I visit '/movies/:id'", type: :feature do
     expect(page).to have_content(movie1.title)
     expect(page).to have_content(movie1.creation_year)
     expect(page).to have_content(movie1.genre)
-    expect(page).to have_content(movie1.actor.actor_youngest_to_oldest)
     expect(page).to have_content(movie1.actor_average_age)
+    expect(actor1.name).to appear_before(actor3.name)
+    expect(actor3.name).to appear_before(actor2.name)
   end 
-  it "can see a form for an actors"
+  it "can see search for an actors name and when I click the name, it redirects me to the movies show page" do 
+    universal = Studio.create!(name: "Universal Studios", location: "California")
+    movie1 = Movie.create!(title: "Minions", creation_year: 2001, genre: "thriller", studio_id: universal.id)
+    actor1 = movie1.actors.create!(name: "Will SMith", age: 40)
+    actor2 = movie1.actors.create!(name: "Jennifer Lopez", age: 50)
+    actor3 = movie1.actors.create!(name: "Tom Hanks", age: 45)
+
+    visit "/movies/#{movie1.id}"
+
+    fill_in "Actor Search", with: "Jennifer Lopez"
+
+    click_button "Submit"
+
+    expect(current_path).to eq("/movies/#{movie1.id}")
+    expect(page).to have_content(actor2.name)
+
+  end
 end
