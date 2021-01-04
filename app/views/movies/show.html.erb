@@ -9,3 +9,16 @@
 <% end %>
 
 <h4>Actor Average Age: <%= @movie.actor_average_age  %>
+
+<h2> Search for Actors <h2>
+<%= form_tag "/movies/#{@movie.id}", method: :get do %>
+  <%= label_tag "Actor Search" %>
+  <%= text_field_tag "Actor Search"%> 
+
+  <%= submit_tag 'Submit' %>
+<% end %>
+
+<% if @actor == nil %>
+<% else %>
+<%= @actor.name %>
+<% end %>
